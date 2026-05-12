@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SimulCore — Consultoría en Simulación de Procesos</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0a0f1e;--ink2:#1e2740;--mist:#f4f3ef;--mist2:#e9e7e1;
+  --accent:#0d5c4a;--accent2:#1a8c70;--accent3:#22b894;
+  --gold2:#f0b740;--line:rgba(10,15,30,0.1);
+  --sans:'Manrope',sans-serif;--serif:'DM Serif Display',serif;--mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--mist);color:var(--ink);overflow-x:hidden;font-size:16px;line-height:1.7}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.25rem 4rem;background:rgba(244,243,239,0.88);backdrop-filter:blur(12px);border-bottom:0.5px solid var(--line)}
+.logo{font-family:var(--mono);font-size:13px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent)}
+.logo span{color:var(--ink)}
+nav ul{list-style:none;display:flex;gap:2.5rem}
+nav a{font-size:13px;font-weight:500;color:var(--ink2);text-decoration:none;letter-spacing:0.04em;opacity:.7;transition:opacity .2s}
+nav a:hover{opacity:1}
+.nav-cta{font-size:12px;font-weight:600;color:var(--mist)!important;background:var(--accent);padding:.5rem 1.25rem;border-radius:2px;opacity:1!important;letter-spacing:.08em;text-transform:uppercase;transition:background .2s!important}
+.nav-cta:hover{background:var(--accent2)!important}
+
+/* HERO — two column, no canvas */
+.hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:8rem 4rem 4rem;gap:4rem;position:relative;overflow:hidden}
+.grid-bg{position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:60px 60px;opacity:.4;pointer-events:none}
+.hero::before{content:'';position:absolute;top:-200px;right:-100px;width:700px;height:700px;background:radial-gradient(circle,rgba(13,92,74,0.06) 0%,transparent 70%);pointer-events:none}
+.hero-label{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent2);margin-bottom:1.5rem;display:flex;align-items:center;gap:.75rem}
+.hero-label::before{content:'';display:inline-block;width:24px;height:1px;background:var(--accent2)}
+h1{font-family:var(--serif);font-size:clamp(2.8rem,5vw,4.4rem);line-height:1.1;color:var(--ink);margin-bottom:1.5rem;font-weight:400}
+h1 em{font-style:italic;color:var(--accent)}
+.hero-sub{font-size:1.05rem;color:var(--ink2);opacity:.7;max-width:500px;margin-bottom:2.5rem;line-height:1.8;font-weight:300}
+.hero-actions{display:flex;gap:1rem;align-items:center}
+.btn-primary{background:var(--accent);color:var(--mist);padding:.9rem 2rem;border:none;border-radius:2px;font-family:var(--sans);font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;text-decoration:none;display:inline-block;transition:background .2s,transform .15s}
+.btn-primary:hover{background:var(--accent2);transform:translateY(-1px)}
+.btn-secondary{color:var(--ink);font-size:13px;font-weight:500;text-decoration:none;display:flex;align-items:center;gap:.5rem;opacity:.6;transition:opacity .2s}
+.btn-secondary:hover{opacity:1}
+.btn-secondary::after{content:'→'}
+
+/* HERO VISUAL — static SVG chart */
+.hero-visual{display:flex;align-items:center;justify-content:center}
+.sim-container{width:100%;max-width:520px;aspect-ratio:1;position:relative}
+.sim-svg{width:100%;height:100%}
+
+/* STATS */
+.stats-bar{background:var(--ink);padding:2.5rem 4rem;display:grid;grid-template-columns:repeat(4,1fr);gap:2rem}
+.stat-item{text-align:center;padding:0 1rem;border-right:.5px solid rgba(255,255,255,.1)}
+.stat-item:last-child{border-right:none}
+.stat-num{font-family:var(--serif);font-size:2.8rem;color:var(--accent3);line-height:1;margin-bottom:.5rem;font-weight:400}
+.stat-label{font-size:11px;color:rgba(255,255,255,.45);letter-spacing:.12em;text-transform:uppercase;font-family:var(--mono)}
+
+section{padding:7rem 4rem}
+.section-tag{font-family:var(--mono);font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--accent2);margin-bottom:1rem}
+h2{font-family:var(--serif);font-size:clamp(2rem,3.5vw,3rem);font-weight:400;line-height:1.15;color:var(--ink);margin-bottom:1.5rem}
+h2 em{font-style:italic;color:var(--accent)}
+.section-intro{font-size:1.05rem;color:var(--ink2);opacity:.65;max-width:560px;line-height:1.8;font-weight:300}
+
+.services{background:white}
+.services-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:4rem;gap:2rem}
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5px;background:var(--mist2)}
+.service-card{background:white;padding:2.5rem;transition:background .25s;cursor:default}
+.service-card:hover{background:#fafaf8}
+.service-icon{width:44px;height:44px;margin-bottom:1.5rem}
+.service-num{font-family:var(--mono);font-size:10px;color:var(--accent2);letter-spacing:.15em;margin-bottom:1rem;opacity:.6}
+.service-card h3{font-family:var(--serif);font-size:1.35rem;font-weight:400;color:var(--ink);margin-bottom:.75rem;line-height:1.3}
+.service-card p{font-size:.9rem;color:var(--ink2);opacity:.65;line-height:1.75;font-weight:300}
+.service-link{display:inline-flex;align-items:center;gap:.4rem;font-size:12px;font-weight:600;color:var(--accent);text-decoration:none;letter-spacing:.06em;margin-top:1.5rem;opacity:0;transition:opacity .2s}
+.service-card:hover .service-link{opacity:1}
+
+.methodology{background:var(--ink);color:var(--mist);display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center}
+.methodology h2{color:var(--mist)}
+.methodology h2 em{color:var(--accent3)}
+.methodology .section-tag{color:rgba(34,184,148,.7)}
+.methodology .section-intro{color:rgba(244,243,239,.5)}
+.steps{display:flex;flex-direction:column}
+.step{display:flex;gap:1.5rem;padding:1.75rem 0;border-bottom:.5px solid rgba(255,255,255,.07);align-items:flex-start}
+.step:last-child{border-bottom:none}
+.step-num{font-family:var(--mono);font-size:11px;color:var(--accent3);opacity:.5;min-width:2rem;padding-top:3px}
+.step-content h4{font-size:.95rem;font-weight:600;color:var(--mist);margin-bottom:.35rem;letter-spacing:.02em}
+.step-content p{font-size:.85rem;color:rgba(244,243,239,.45);line-height:1.7;font-weight:300}
+
+.industries{background:var(--mist)}
+.industries-header{text-align:center;margin-bottom:4rem}
+.industries-header .section-intro{margin:0 auto;text-align:center}
+.industry-pills{display:flex;flex-wrap:wrap;gap:.75rem;justify-content:center;max-width:700px;margin:0 auto}
+.pill{padding:.6rem 1.4rem;border:.5px solid var(--line);border-radius:100px;font-size:13px;font-weight:500;color:var(--ink2);background:white;cursor:default;transition:all .2s;font-family:var(--mono);letter-spacing:.04em}
+.pill:hover{background:var(--accent);color:white;border-color:var(--accent)}
+.pill.active{background:var(--ink);color:white;border-color:var(--ink)}
+.case-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem}
+.case-card{background:white;border-radius:2px;overflow:hidden;border:.5px solid var(--mist2)}
+.case-bar{height:3px;background:linear-gradient(90deg,var(--accent),var(--accent3))}
+.case-body{padding:1.75rem}
+.case-industry{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent2);margin-bottom:.75rem}
+.case-card h4{font-family:var(--serif);font-size:1.15rem;font-weight:400;color:var(--ink);margin-bottom:.6rem;line-height:1.3}
+.case-card p{font-size:.85rem;color:var(--ink2);opacity:.6;line-height:1.7;font-weight:300}
+.case-metric{display:flex;align-items:baseline;gap:.4rem;margin-top:1.25rem;padding-top:1.25rem;border-top:.5px solid var(--mist2)}
+.case-metric-num{font-family:var(--serif);font-size:1.6rem;color:var(--accent);font-weight:400}
+.case-metric-desc{font-size:12px;color:var(--ink2);opacity:.55;font-weight:300}
+
+.cta-section{background:var(--accent);padding:6rem 4rem;display:grid;grid-template-columns:1fr auto;gap:4rem;align-items:center}
+.cta-section h2{color:white;font-family:var(--serif);font-size:clamp(1.8rem,3vw,2.8rem);font-weight:400;margin:0}
+.cta-section h2 em{font-style:italic;color:var(--gold2)}
+.cta-form{display:flex;flex-direction:column;gap:.75rem;min-width:320px}
+.cta-form input{background:rgba(255,255,255,.12);border:.5px solid rgba(255,255,255,.25);border-radius:2px;padding:.8rem 1rem;font-family:var(--sans);font-size:14px;color:white;outline:none;transition:border-color .2s}
+.cta-form input::placeholder{color:rgba(255,255,255,.45)}
+.cta-form input:focus{border-color:rgba(255,255,255,.6)}
+.cta-form button{background:var(--ink);color:white;border:none;padding:.9rem 1.5rem;font-family:var(--sans);font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;border-radius:2px;cursor:pointer;transition:background .2s}
+.cta-form button:hover{background:var(--ink2)}
+
+footer{background:var(--ink);color:rgba(255,255,255,.35);padding:3rem 4rem;display:flex;justify-content:space-between;align-items:center;font-size:12px;font-family:var(--mono);letter-spacing:.06em}
+footer .logo{color:rgba(34,184,148,.5)}
+.footer-links{display:flex;gap:2rem}
+.footer-links a{color:rgba(255,255,255,.3);text-decoration:none;transition:color .2s}
+.footer-links a:hover{color:rgba(255,255,255,.7)}
+
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+
+@media(max-width:900px){
+  nav{padding:1rem 1.5rem} nav ul{display:none}
+  .hero{grid-template-columns:1fr;padding:6rem 1.5rem 2rem}
+  .hero-visual{display:none}
+  .stats-bar{grid-template-columns:repeat(2,1fr);padding:2rem 1.5rem}
+  section{padding:4rem 1.5rem}
+  .services-grid{grid-template-columns:1fr}
+  .methodology{grid-template-columns:1fr;gap:3rem}
+  .case-grid{grid-template-columns:1fr}
+  .cta-section{grid-template-columns:1fr}
+  .cta-form{min-width:unset}
+  .services-header{flex-direction:column;align-items:flex-start}
+  footer{flex-direction:column;gap:1rem;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Simul<span>Core</span></div>
+  <ul>
+    <li><a href="#servicios">Servicios</a></li>
+    <li><a href="#metodologia">Metodología</a></li>
+    <li><a href="#industrias">Industrias</a></li>
+    <li><a href="#contacto" class="nav-cta">Consulta gratuita</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="grid-bg"></div>
+
+  <div class="hero-content fade-in">
+    <div class="hero-label">Consultoría especializada</div>
+    <h1>Decisiones más inteligentes,<br><em>respaldadas por datos</em></h1>
+    <p class="hero-sub">Transformamos la complejidad operacional en claridad estratégica. Modelamos, simulamos y optimizamos sus procesos antes de ejecutar, eliminando el riesgo del ensayo y error.</p>
+    <div class="hero-actions">
+      <a href="#contacto" class="btn-primary">Solicitar diagnóstico</a>
+      <a href="#metodologia" class="btn-secondary">Ver metodología</a>
+    </div>
+  </div>
+
+  <div class="hero-visual fade-in" style="transition-delay:.2s">
+    <div class="sim-container">
+      <svg class="sim-svg" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Grid -->
+        <line x1="50" y1="450" x2="460" y2="450" stroke="#0d5c4a" stroke-width="0.5" opacity="0.3"/>
+        <line x1="50" y1="370" x2="460" y2="370" stroke="#0d5c4a" stroke-width="0.5" opacity="0.15"/>
+        <line x1="50" y1="290" x2="460" y2="290" stroke="#0d5c4a" stroke-width="0.5" opacity="0.15"/>
+        <line x1="50" y1="210" x2="460" y2="210" stroke="#0d5c4a" stroke-width="0.5" opacity="0.15"/>
+        <line x1="50" y1="130" x2="460" y2="130" stroke="#0d5c4a" stroke-width="0.5" opacity="0.15"/>
+        <line x1="50" y1="130" x2="50" y2="460" stroke="#0d5c4a" stroke-width="0.5" opacity="0.3"/>
+        <line x1="152" y1="130" x2="152" y2="460" stroke="#0d5c4a" stroke-width="0.5" opacity="0.1"/>
+        <line x1="254" y1="130" x2="254" y2="460" stroke="#0d5c4a" stroke-width="0.5" opacity="0.1"/>
+        <line x1="356" y1="130" x2="356" y2="460" stroke="#0d5c4a" stroke-width="0.5" opacity="0.1"/>
+        <line x1="460" y1="130" x2="460" y2="460" stroke="#0d5c4a" stroke-width="0.5" opacity="0.3"/>
+        <!-- Area fills -->
+        <path d="M50,420 C100,410 150,390 200,380 C250,370 300,395 350,400 C380,403 420,410 460,415 L460,450 L50,450 Z" fill="#0d5c4a" opacity="0.08"/>
+        <path d="M50,390 C100,360 150,310 200,270 C250,230 300,220 350,215 C380,212 420,205 460,200 L460,450 L50,450 Z" fill="#22b894" opacity="0.12"/>
+        <!-- Lines -->
+        <path d="M50,420 C100,410 150,390 200,380 C250,370 300,395 350,400 C380,403 420,410 460,415" stroke="#0d5c4a" stroke-width="1.5" opacity="0.35" stroke-dasharray="4 3"/>
+        <path d="M50,390 C100,360 150,310 200,270 C250,230 300,220 350,215 C380,212 420,205 460,200" stroke="#22b894" stroke-width="2.5" stroke-linecap="round">
+          <animate attributeName="stroke-dashoffset" from="600" to="0" dur="2.5s" fill="freeze"/>
+          <animate attributeName="stroke-dasharray" from="0 600" to="600 0" dur="2.5s" fill="freeze"/>
+        </path>
+        <!-- Dots -->
+        <circle cx="50" cy="390" r="4" fill="#22b894" opacity="0.8"/>
+        <circle cx="152" cy="330" r="4" fill="#22b894" opacity="0.8"><animate attributeName="opacity" values="0;0.8" dur="2.5s" fill="freeze" begin="0.5s"/></circle>
+        <circle cx="254" cy="255" r="4" fill="#22b894" opacity="0.8"><animate attributeName="opacity" values="0;0.8" dur="2.5s" fill="freeze" begin="1s"/></circle>
+        <circle cx="356" cy="215" r="4" fill="#22b894" opacity="0.8"><animate attributeName="opacity" values="0;0.8" dur="2.5s" fill="freeze" begin="1.5s"/></circle>
+        <circle cx="460" cy="200" r="5" fill="#22b894"><animate attributeName="opacity" values="0;1" dur="2.5s" fill="freeze" begin="2s"/><animate attributeName="r" values="5;8;5" dur="2s" repeatCount="indefinite" begin="2.5s"/></circle>
+        <!-- Axis labels -->
+        <text x="56" y="445" font-family="DM Mono,monospace" font-size="9" fill="#0d5c4a" opacity="0.5">T0</text>
+        <text x="158" y="445" font-family="DM Mono,monospace" font-size="9" fill="#0d5c4a" opacity="0.5">T1</text>
+        <text x="260" y="445" font-family="DM Mono,monospace" font-size="9" fill="#0d5c4a" opacity="0.5">T2</text>
+        <text x="362" y="445" font-family="DM Mono,monospace" font-size="9" fill="#0d5c4a" opacity="0.5">T3</text>
+        <text x="462" y="445" font-family="DM Mono,monospace" font-size="9" fill="#0d5c4a" opacity="0.5">T4</text>
+        <!-- Legend -->
+        <rect x="50" y="60" width="160" height="52" rx="2" fill="white" opacity="0.85"/>
+        <line x1="62" y1="80" x2="82" y2="80" stroke="#0d5c4a" stroke-width="1.5" stroke-dasharray="3 2" opacity="0.4"/>
+        <text x="88" y="84" font-family="DM Mono,monospace" font-size="10" fill="#0a0f1e" opacity="0.55">Proceso actual</text>
+        <line x1="62" y1="100" x2="82" y2="100" stroke="#22b894" stroke-width="2.5"/>
+        <text x="88" y="104" font-family="DM Mono,monospace" font-size="10" fill="#0d5c4a" opacity="0.9">Proceso optimizado</text>
+        <!-- Badge -->
+        <rect x="330" y="155" width="120" height="38" rx="2" fill="#0d5c4a"/>
+        <text x="390" y="171" font-family="DM Mono,monospace" font-size="10" fill="rgba(255,255,255,0.6)" text-anchor="middle">mejora promedio</text>
+        <text x="390" y="187" font-family="DM Serif Display,serif" font-size="15" fill="#22b894" text-anchor="middle">−38% costos</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat-item"><div class="stat-num">200+</div><div class="stat-label">proyectos completados</div></div>
+  <div class="stat-item"><div class="stat-num">15</div><div class="stat-label">años de experiencia</div></div>
+  <div class="stat-item"><div class="stat-num">38%</div><div class="stat-label">reducción de costos promedio</div></div>
+  <div class="stat-item"><div class="stat-num">12</div><div class="stat-label">industrias atendidas</div></div>
+</div>
+
+<!-- SERVICES -->
+<section class="services" id="servicios">
+  <div class="services-header">
+    <div><div class="section-tag">// Servicios</div><h2>Lo que <em>hacemos</em></h2></div>
+    <p class="section-intro">Cada proyecto comienza con una comprensión profunda de su operación. Nuestros modelos no son plantillas: son réplicas precisas de su realidad.</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card fade-in"><div class="service-num">01</div><svg class="service-icon" viewBox="0 0 44 44" fill="none"><rect x="4" y="4" width="36" height="36" rx="2" stroke="#0d5c4a" stroke-width="1" opacity="0.3"/><path d="M12 32 L18 22 L24 26 L32 14" stroke="#22b894" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="32" r="2" fill="#22b894"/><circle cx="18" cy="22" r="2" fill="#22b894" opacity="0.6"/><circle cx="24" cy="26" r="2" fill="#22b894" opacity="0.6"/><circle cx="32" cy="14" r="2" fill="#22b894"/></svg><h3>Modelado y Simulación Discreta</h3><p>Creamos modelos digitales de alta fidelidad que replican el comportamiento estocástico de sus operaciones: colas, recursos, tiempos de ciclo y variabilidad real.</p><a href="#contacto" class="service-link">Explorar servicio →</a></div>
+    <div class="service-card fade-in" style="transition-delay:.1s"><div class="service-num">02</div><svg class="service-icon" viewBox="0 0 44 44" fill="none"><circle cx="22" cy="22" r="16" stroke="#0d5c4a" stroke-width="1" opacity="0.3"/><circle cx="22" cy="22" r="8" stroke="#22b894" stroke-width="1.5" opacity="0.6"/><circle cx="22" cy="22" r="3" fill="#22b894"/><line x1="22" y1="6" x2="22" y2="12" stroke="#0d5c4a" stroke-width="1" opacity="0.4"/><line x1="22" y1="32" x2="22" y2="38" stroke="#0d5c4a" stroke-width="1" opacity="0.4"/><line x1="6" y1="22" x2="12" y2="22" stroke="#0d5c4a" stroke-width="1" opacity="0.4"/><line x1="32" y1="22" x2="38" y2="22" stroke="#0d5c4a" stroke-width="1" opacity="0.4"/></svg><h3>Optimización de Cadenas de Suministro</h3><p>Analizamos inventarios, flujos de distribución y políticas de reabastecimiento bajo escenarios reales. Identificamos el equilibrio óptimo entre nivel de servicio y costo.</p><a href="#contacto" class="service-link">Explorar servicio →</a></div>
+    <div class="service-card fade-in" style="transition-delay:.2s"><div class="service-num">03</div><svg class="service-icon" viewBox="0 0 44 44" fill="none"><rect x="8" y="28" width="8" height="8" rx="1" stroke="#22b894" stroke-width="1.5" opacity="0.6"/><rect x="18" y="20" width="8" height="16" rx="1" stroke="#22b894" stroke-width="1.5" opacity="0.8"/><rect x="28" y="10" width="8" height="26" rx="1" stroke="#22b894" stroke-width="1.5"/><line x1="8" y1="40" x2="40" y2="40" stroke="#0d5c4a" stroke-width="1" opacity="0.3"/></svg><h3>Análisis de Capacidad e Inversión</h3><p>Evaluamos el impacto de nuevas inversiones en equipos, personal o tecnología antes de comprometer capital. Cuantificamos ROI bajo incertidumbre con intervalos de confianza.</p><a href="#contacto" class="service-link">Explorar servicio →</a></div>
+    <div class="service-card fade-in"><div class="service-num">04</div><svg class="service-icon" viewBox="0 0 44 44" fill="none"><rect x="6" y="14" width="12" height="16" rx="2" stroke="#22b894" stroke-width="1.5" opacity="0.7"/><rect x="26" y="18" width="12" height="12" rx="2" stroke="#22b894" stroke-width="1.5" opacity="0.5"/><path d="M18 22 L26 22" stroke="#0d5c4a" stroke-width="1" stroke-dasharray="2 2" opacity="0.5"/><circle cx="12" cy="10" r="3" stroke="#22b894" stroke-width="1.5" opacity="0.4"/><circle cx="32" cy="14" r="3" stroke="#22b894" stroke-width="1.5" opacity="0.4"/></svg><h3>Diseño de Layouts y Flujos de Planta</h3><p>Simulamos alternativas de distribución física para plantas industriales, hospitales o centros de distribución, maximizando el throughput y reduciendo transportes innecesarios.</p><a href="#contacto" class="service-link">Explorar servicio →</a></div>
+    <div class="service-card fade-in" style="transition-delay:.1s"><div class="service-num">05</div><svg class="service-icon" viewBox="0 0 44 44" fill="none"><path d="M8 36 L36 8" stroke="#22b894" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/><rect x="6" y="26" width="10" height="10" rx="1" stroke="#22b894" stroke-width="1.5" opacity="0.5"/><rect x="18" y="16" width="10" height="10" rx="1" stroke="#22b894" stroke-width="1.5" opacity="0.7"/><rect x="30" y="6" width="10" height="10" rx="1" stroke="#22b894" stroke-width="1.5"/></svg><h3>Capacitación y Transferencia de Conocimiento</h3><p>Formamos equipos internos en el uso de herramientas de simulación (Arena, AnyLogic, SimPy), asegurando que la capacidad analítica permanezca en su organización.</p><a href="#contacto" class="service-link">Explorar servicio →</a></div>
+    <div class="service-card" style="background:#f7f6f2;display:flex;align-items:center;justify-content:center;"><div style="text-align:center;opacity:.25;"><svg width="36" height="36" viewBox="0 0 36 36" fill="none"><circle cx="18" cy="18" r="14" stroke="#0d5c4a" stroke-width="1" stroke-dasharray="3 3"/><path d="M12 18h12M18 12v12" stroke="#0d5c4a" stroke-width="1.5" stroke-linecap="round"/></svg><p style="font-family:var(--mono);font-size:10px;letter-spacing:.15em;color:#0d5c4a;margin-top:.75rem">Próximamente</p></div></div>
+  </div>
+</section>
+
+<!-- METHODOLOGY -->
+<section class="methodology" id="metodologia">
+  <div>
+    <div class="section-tag">// Metodología</div>
+    <h2>Un proceso <em>riguroso</em>,<br>resultados predecibles</h2>
+    <p class="section-intro">No trabajamos con suposiciones. Cada modelo está validado contra datos reales de su operación antes de ser usado para tomar decisiones.</p>
+  </div>
+  <div class="steps">
+    <div class="step fade-in"><div class="step-num">01</div><div class="step-content"><h4>Diagnóstico y levantamiento de datos</h4><p>Mapeamos el proceso actual, identificamos fuentes de variabilidad y recopilamos datos estadísticos representativos de la operación real.</p></div></div>
+    <div class="step fade-in" style="transition-delay:.1s"><div class="step-num">02</div><div class="step-content"><h4>Modelado conceptual y validación</h4><p>Construimos el modelo lógico del sistema y lo validamos con expertos del proceso. Ningún supuesto queda sin documentar.</p></div></div>
+    <div class="step fade-in" style="transition-delay:.2s"><div class="step-num">03</div><div class="step-content"><h4>Implementación y calibración del simulador</h4><p>Traducimos el modelo a software de simulación y calibramos parámetros hasta que el modelo replique el comportamiento histórico observado.</p></div></div>
+    <div class="step fade-in" style="transition-delay:.3s"><div class="step-num">04</div><div class="step-content"><h4>Experimentación y análisis de escenarios</h4><p>Corremos cientos de réplicas de cada escenario alternativo, generando intervalos de confianza estadísticamente robustos para cada KPI.</p></div></div>
+    <div class="step fade-in" style="transition-delay:.4s"><div class="step-num">05</div><div class="step-content"><h4>Recomendaciones e implementación</h4><p>Entregamos un plan de acción priorizado por impacto y factibilidad, con acompañamiento durante la implementación de los cambios.</p></div></div>
+  </div>
+</section>
+
+<!-- INDUSTRIES -->
+<section class="industries" id="industrias">
+  <div class="industries-header fade-in">
+    <div class="section-tag">// Industrias</div>
+    <h2>Experiencia <em>transversal</em></h2>
+    <p class="section-intro">Nuestros modelos han optimizado operaciones en sectores tan diversos como la minería y la salud.</p>
+  </div>
+  <div class="industry-pills fade-in">
+    <div class="pill active">Manufactura</div><div class="pill">Minería</div><div class="pill">Salud</div><div class="pill">Logística</div><div class="pill">Retail</div><div class="pill">Energía</div><div class="pill">Puertos</div><div class="pill">Construcción</div><div class="pill">Agroindustria</div>
+  </div>
+  <div class="case-grid">
+    <div class="case-card fade-in"><div class="case-bar"></div><div class="case-body"><div class="case-industry">Minería</div><h4>Optimización de flota de camiones en operación a rajo abierto</h4><p>Simulación de 24 escenarios de despacho para determinar la composición óptima de flota según tonelaje objetivo.</p><div class="case-metric"><span class="case-metric-num">22%</span><span class="case-metric-desc">reducción en costo por tonelada movida</span></div></div></div>
+    <div class="case-card fade-in" style="transition-delay:.1s"><div class="case-bar"></div><div class="case-body"><div class="case-industry">Salud</div><h4>Rediseño del flujo de urgencias en hospital público</h4><p>Modelo de simulación de 3 turnos para identificar cuellos de botella y diseñar política de triaje que reduzca tiempo de espera.</p><div class="case-metric"><span class="case-metric-num">41%</span><span class="case-metric-desc">reducción en tiempo promedio de espera</span></div></div></div>
+    <div class="case-card fade-in" style="transition-delay:.2s"><div class="case-bar"></div><div class="case-body"><div class="case-industry">Manufactura</div><h4>Diseño de planta para nueva línea de producción FMCG</h4><p>Evaluación de 5 alternativas de layout y política de mantenimiento antes de la inversión en equipos por USD 8M.</p><div class="case-metric"><span class="case-metric-num">USD 1.2M</span><span class="case-metric-desc">ahorro evitando sobreinversión en capacidad</span></div></div></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contacto">
+  <div><h2>¿Listo para tomar<br>decisiones <em>con certeza</em>?</h2></div>
+  <div class="cta-form">
+    <input type="text" placeholder="Nombre y empresa">
+    <input type="email" placeholder="Correo corporativo">
+    <input type="text" placeholder="Cuéntenos brevemente su desafío">
+    <button type="button">Solicitar diagnóstico gratuito →</button>
+  </div>
+</section>
+
+<footer>
+  <div class="logo">Simul<span style="color:rgba(255,255,255,0.25)">Core</span> — Consultoría en Simulación</div>
+  <div class="footer-links"><a href="#">Privacidad</a><a href="#">Términos</a><a href="#">contacto@simulcore.com</a></div>
+</footer>
+
+<script>
+const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:.12});
+document.querySelectorAll('.fade-in').forEach(el=>observer.observe(el));
+document.querySelectorAll('.pill').forEach(pill=>{pill.addEventListener('click',function(){document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));this.classList.add('active')})});
+</script>
+</body>
+</html>
