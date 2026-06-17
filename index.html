@@ -862,7 +862,7 @@
         <circle cx="22" cy="22" r="3" fill="#22b894" opacity="0.8"/>
       </svg>
       <h3>Capacitación y Transferencia de Conocimiento</h3>
-      <p>Formamos equipos internos en el uso de herramientas de simulación (Arena, AnyLogic, SimPy), asegurando que la capacidad analítica permanezca en su organización.</p>
+      <p>Formamos equipos internos en el uso de herramientas de simulación (ProModel), asegurando que la capacidad analítica permanezca en su organización.</p>
       <a href="#contacto" class="service-link">Explorar servicio →</a>
     </div>
   </div>
@@ -1029,11 +1029,29 @@
   <div class="footer-links">
     <a href="#">Privacidad</a>
     <a href="#">Términos</a>
-    <a href="#">contacto@simulacore.com</a>
+    <a href="#">contacto@simulacore.cl</a>
   </div>
 </footer>
 
 <script>
+function enviarEmail() {
+  const nombre  = document.querySelector('.cta-form input[type="text"]').value.trim();
+  const email   = document.querySelector('.cta-form input[type="email"]').value.trim();
+  const desafio = document.querySelectorAll('.cta-form input[type="text"]')[1].value.trim();
+
+  const asunto  = encodeURIComponent('Solicitud de diagnóstico gratuito — SimulaCore');
+  const cuerpo  = encodeURIComponent(
+    `Hola Edgar,\n\nSe ha recibido una solicitud de diagnóstico gratuito desde el sitio web:\n\n` +
+    `Nombre / Empresa: ${nombre || '—'}\n` +
+    `Correo de contacto: ${email || '—'}\n` +
+    `Desafío / Mensaje: ${desafio || '—'}\n\n` +
+    `Saludos,\nSimulaCore`
+  );
+
+  window.location.href = `mailto:edgarberho@gmail.com?subject=${asunto}&body=${cuerpo}`;
+}
+
+
 function enviarWhatsApp() {
   const nombre = document.querySelector('.cta-form input[type="text"]').value.trim();
   const email  = document.querySelector('.cta-form input[type="email"]').value.trim();
@@ -1060,12 +1078,9 @@ document.querySelectorAll('.pill').forEach(pill => {
     document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
     this.classList.add('active');
     const selected = this.dataset.industry;
+    const showAll = ['all', 'manufactura', 'salud', 'puertos'].includes(selected);
     document.querySelectorAll('.case-card').forEach(card => {
-      if (selected === 'all' || card.dataset.industry === selected) {
-        card.style.display = '';
-      } else {
-        card.style.display = 'none';
-      }
+      card.style.display = (showAll || card.dataset.industry === selected) ? '' : 'none';
     });
   });
 });
