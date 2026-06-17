@@ -926,15 +926,16 @@
   </div>
 
   <div class="industry-pills fade-in">
-    <div class="pill active">Minería</div>
-    <div class="pill">Manufactura</div>
-    <div class="pill">Salud</div>
-    <div class="pill">Logística</div>
-    <div class="pill">Puertos</div>
+    <div class="pill active" data-industry="all">Todos</div>
+    <div class="pill" data-industry="mineria">Minería</div>
+    <div class="pill" data-industry="logistica">Logística</div>
+    <div class="pill" data-industry="manufactura">Manufactura</div>
+    <div class="pill" data-industry="salud">Salud</div>
+    <div class="pill" data-industry="puertos">Puertos</div>
   </div>
 
   <div class="case-grid">
-    <div class="case-card fade-in">
+    <div class="case-card fade-in" data-industry="mineria">
       <div class="case-bar"></div>
       <div class="case-body">
         <div class="case-industry">Minería · Codelco — Chuquicamata Subterránea</div>
@@ -946,7 +947,7 @@
         </div>
       </div>
     </div>
-    <div class="case-card fade-in" style="transition-delay:0.1s">
+    <div class="case-card fade-in" style="transition-delay:0.1s" data-industry="mineria">
       <div class="case-bar"></div>
       <div class="case-body">
         <div class="case-industry">Minería · Lumina Copper — Caserones</div>
@@ -958,7 +959,7 @@
         </div>
       </div>
     </div>
-    <div class="case-card fade-in" style="transition-delay:0.2s">
+    <div class="case-card fade-in" style="transition-delay:0.2s" data-industry="mineria">
       <div class="case-bar"></div>
       <div class="case-body">
         <div class="case-industry">Minería · Codelco Chile — Gabriela Mistral</div>
@@ -967,6 +968,42 @@
         <div class="case-metric">
           <span class="case-metric-num">Integrado</span>
           <span class="case-metric-desc">modelo mina-planta con análisis dinámico de capacidad</span>
+        </div>
+      </div>
+    </div>
+    <div class="case-card fade-in" data-industry="logistica">
+      <div class="case-bar"></div>
+      <div class="case-body">
+        <div class="case-industry">Logística · Orica Mining Services</div>
+        <h4>Optimización de cadena de suministro de emulsión a granel</h4>
+        <p>Estudio de alternativas para optimizar el proceso de abastecimiento y distribución de emulsión a granel, evaluadas mediante un modelo de simulación que permitió identificar la configuración de mayor eficiencia operacional.</p>
+        <div class="case-metric">
+          <span class="case-metric-num">Simulación</span>
+          <span class="case-metric-desc">de múltiples alternativas de cadena de suministro</span>
+        </div>
+      </div>
+    </div>
+    <div class="case-card fade-in" style="transition-delay:0.1s" data-industry="logistica">
+      <div class="case-bar"></div>
+      <div class="case-body">
+        <div class="case-industry">Logística · Chilexpress</div>
+        <h4>Simulación del Centro de Distribución ENEA 1</h4>
+        <p>Proyecto de simulación para modelar y optimizar los flujos operacionales del centro de distribución ENEA 1, evaluando capacidad de procesamiento, cuellos de botella y alternativas de mejora ante variaciones de demanda.</p>
+        <div class="case-metric">
+          <span class="case-metric-num">CD ENEA 1</span>
+          <span class="case-metric-desc">flujos operacionales modelados y optimizados</span>
+        </div>
+      </div>
+    </div>
+    <div class="case-card fade-in" style="transition-delay:0.2s" data-industry="logistica">
+      <div class="case-bar"></div>
+      <div class="case-body">
+        <div class="case-industry">Logística · Graneles de Chile</div>
+        <h4>Impacto de planta de silos en la cadena de suministro</h4>
+        <p>Estudio de simulación para evaluar el impacto de la entrada en operación de la nueva planta de silos en la cadena de suministro, analizando flujos, capacidades y tiempos de ciclo bajo distintos escenarios de operación.</p>
+        <div class="case-metric">
+          <span class="case-metric-num">Escenarios</span>
+          <span class="case-metric-desc">evaluados antes de la puesta en marcha</span>
         </div>
       </div>
     </div>
@@ -1022,8 +1059,19 @@ document.querySelectorAll('.pill').forEach(pill => {
   pill.addEventListener('click', function() {
     document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
     this.classList.add('active');
+    const selected = this.dataset.industry;
+    document.querySelectorAll('.case-card').forEach(card => {
+      if (selected === 'all' || card.dataset.industry === selected) {
+        card.style.display = '';
+      } else {
+        card.style.display = 'none';
+      }
+    });
   });
 });
+
+// Mostrar solo minería al cargar
+document.querySelector('.pill[data-industry="mineria"]').click();
 </script>
 </body>
 </html>
